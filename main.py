@@ -9,7 +9,7 @@ from enum import Enum
 from PySide6.QtCore import Signal, QRunnable, QThreadPool, QObject, Slot
 from PySide6.QtWidgets import *
 
-from translator.awsTranslate import runAwsTranslator
+from translator.awsTranslate import *
 from translator.googleTranslate import *
 from ui.screens.langs import *
 from ui.screens.mainScreen import Ui_MainWindow
