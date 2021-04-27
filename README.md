@@ -3,7 +3,7 @@
 Automate conversion of strings.xml to different languages
 
 ## Download
-[Click here to download - v1.0-beta (212Mbs)](https://github.com/wakaztahir/Strings-Translator/releases/download/1.0-beta/StringsTranslator.exe)
+[Click here to download - v1.0-beta](https://github.com/wakaztahir/Strings-Translator/releases/download/v1.0/Strings.Translator-v1b.exe)
 
 ## Here's a demo : 
 
@@ -13,4 +13,3 @@ Automate conversion of strings.xml to different languages
 
   * AWS Translator does not work yet due to missing credentials (will be added)
   * Deep Translator has't been configured so you have to use the Google Translate
-  * The Executable file is more than 200 MBs (could not strip out the Qt plugins with Auto Py To Exe)
