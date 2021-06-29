@@ -3,7 +3,7 @@
 Automate conversion of strings.xml to different languages
 
 ## Download
-[Click here to download - v1.0-beta](https://github.com/wakaztahir/Strings-Translator/releases/download/v1.0/Strings.Translator-v1b.exe)
+[Click here to download - v1.0-beta](https://github.com/wakaztahir/Strings-Translator/releases/download/v1.1/main.exe)
 
 ## Here's a demo : 
 
