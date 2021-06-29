@@ -8,9 +8,8 @@ import time
 from enum import Enum
 
 import PyQt5.QtCore
-from PyQt5.QtCore import QRunnable, QThreadPool, QObject, pyqtSignal, pyqtSlot
+from PyQt5.QtCore import QRunnable, QThreadPool, QObject, pyqtSignal, pyqtSlot, QUrl
 from PyQt5.QtWidgets import *
-from PyQt5.uic.properties import QtCore
 
 from translator.awsTranslate import *
 from translator.googleTranslate import *
@@ -189,7 +188,9 @@ def onApiChanged():
 
 def chooseFile():
     global CurrentFileTranslating
-    file = QFileDialog().getOpenFileUrl(caption="Select strings.xml", dir="./", filter="String XML File (*.xml)")
+    dirUrl = QUrl("./")
+    file = QFileDialog().getOpenFileUrl(caption="Select strings.xml", directory=dirUrl,
+                                        filter="String XML File (*.xml)")
     url = file[0]
     if url.isValid():
         screen.fileText.setText(str(url.fileName()))
@@ -202,7 +203,8 @@ def chooseFile():
 
 def chooseSave():
     if not TranslationRunning:
-        file = QFileDialog().getExistingDirectoryUrl(caption="Select Output Directory", dir="./")
+        dirUrl = QUrl("./")
+        file = QFileDialog().getExistingDirectoryUrl(caption="Select Output Directory", directory=dirUrl)
         if file.isValid():
             screen.outputText.setText((file.toLocalFile() + "/"))
         else:
