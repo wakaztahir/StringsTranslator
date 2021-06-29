@@ -3,11 +3,14 @@
 import sqlite3
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import sys
 import time
 from enum import Enum
 
-from PySide6.QtCore import Signal, QRunnable, QThreadPool, QObject, Slot
-from PySide6.QtWidgets import *
+import PyQt5.QtCore
+from PyQt5.QtCore import QRunnable, QThreadPool, QObject, pyqtSignal, pyqtSlot
+from PyQt5.QtWidgets import *
+from PyQt5.uic.properties import QtCore
 
 from translator.awsTranslate import *
 from translator.googleTranslate import *
@@ -39,9 +42,9 @@ ThreadsToUse = 1
 # Translator Classes
 
 class TranslatorSignals(QObject):
-    status = Signal(str)
-    onCompleted = Signal(str)
-    onFailure = Signal(str)
+    status = pyqtSignal(str)
+    onCompleted = pyqtSignal(str)
+    onFailure = pyqtSignal(str)
 
 
 class Translator(QRunnable):
@@ -52,7 +55,7 @@ class Translator(QRunnable):
         self.signals = TranslatorSignals()
         self.name = translatorName
 
-    @Slot()
+    @pyqtSlot()
     def run(self):
         try:
             self.signals.status.emit("starting " + self.name + " translator for " + self.language)
@@ -364,7 +367,7 @@ def startTranslationApi(language):
 # Main Program Runner
 
 def main():
-    app = QApplication()
+    app = QApplication(sys.argv)
     window = QMainWindow()
     screen.setupUi(window)
     setupLanguages()

@@ -1,6 +1,6 @@
-from PySide6.QtCore import QEvent, Qt
-from PySide6.QtGui import QPalette, QStandardItem, QFontMetrics
-from PySide6.QtWidgets import QComboBox
+from PyQt5.QtCore import QEvent, Qt
+from PyQt5.QtGui import QPalette, QStandardItem, QFontMetrics
+from PyQt5.QtWidgets import QComboBox
 
 
 class CheckableComboBox(QComboBox):
