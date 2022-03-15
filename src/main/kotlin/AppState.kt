@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import components.TranslationApi
+import model.PopularLanguages
 import model.TranslateStatus
 import model.TranslationLanguage
 import java.io.File
@@ -15,7 +16,7 @@ class AppState {
     var sourceFile by mutableStateOf<File?>(null)
     var translationRunning  by mutableStateOf(false)
     var outputFile by mutableStateOf<File>(FileSystems.getDefault().getPath("").toAbsolutePath().toFile().resolve("strings/"))
-    val languagesList = mutableStateListOf<TranslationLanguage>(*TranslationLanguage.values()).apply { remove(sourceLanguage) }
+    val languagesList = mutableStateListOf<TranslationLanguage>(*PopularLanguages.toTypedArray()).apply { remove(sourceLanguage) }
     val statusList = mutableStateListOf<TranslateStatus>()
 
     @Synchronized

@@ -151,3 +151,27 @@ enum class TranslationLanguage(val key: String) {
     Yoruba("yo"),
     Zulu("zu"),
 }
+
+val PopularLanguages = listOf<TranslationLanguage>(
+    TranslationLanguage.English,
+    TranslationLanguage.Arabic,
+    TranslationLanguage.ChineseSimplified,
+    TranslationLanguage.Czech,
+    TranslationLanguage.Dutch,
+    TranslationLanguage.French,
+    TranslationLanguage.German,
+    TranslationLanguage.Hindi,
+    TranslationLanguage.Italian,
+    TranslationLanguage.Japanese,
+    TranslationLanguage.Spanish,
+    TranslationLanguage.Russian,
+    TranslationLanguage.Filipino,
+    TranslationLanguage.Greek,
+    TranslationLanguage.Korean,
+    TranslationLanguage.Serbian,
+    TranslationLanguage.Urdu,
+    TranslationLanguage.Swedish,
+    TranslationLanguage.Turkish,
+    TranslationLanguage.Urdu,
+    TranslationLanguage.Ukrainian
+)

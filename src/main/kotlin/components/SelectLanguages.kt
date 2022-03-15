@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import model.PopularLanguages
 import model.TranslationLanguage
 
 @Composable
@@ -59,6 +60,14 @@ fun SelectLanguages(modifier : Modifier = Modifier){
                             state.languagesList.clear()
                         }){
                             Text(text = "Deselect All")
+                        }
+                        Spacer(modifier = Modifier.width(4.dp))
+                        OutlinedButton(onClick = {
+                            state.languagesList.clear()
+                            state.languagesList.addAll(PopularLanguages)
+                            state.languagesList.remove(state.sourceLanguage)
+                        }){
+                            Text(text = "Add Popular")
                         }
                     }
                     MultipleLanguageSelectionList(
