@@ -33,9 +33,10 @@ fun SelectFileField(modifier: Modifier = Modifier) {
         modifier = modifier, horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically
     ) {
         BasicText(
-            modifier = Modifier.weight(1f).horizontalScroll(rememberScrollState())
+            modifier = Modifier.weight(1f)
                 .border(2.dp, color = MaterialTheme.colors.onBackground.copy(.05f), shape = RoundedCornerShape(8.dp))
-                .padding(12.dp),
+                .padding(12.dp)
+                .horizontalScroll(rememberScrollState()),
             text = "Source : " + state.sourceFile?.path.toString(),
             style = MaterialTheme.typography.caption,
             softWrap = false

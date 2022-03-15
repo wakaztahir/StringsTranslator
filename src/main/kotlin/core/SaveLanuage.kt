@@ -6,6 +6,7 @@ import kotlinx.coroutines.withContext
 import model.StatusType
 import model.TranslateStatus
 import model.TranslationLanguage
+import java.io.BufferedWriter
 import java.io.File
 
 suspend fun AppState.saveLanguage(
@@ -13,24 +14,28 @@ suspend fun AppState.saveLanguage(
     langMap : Map<String,String>
 ){
     val folderName = "values-${language.key}"
-    var file = outputFile?.resolve("./$folderName/strings.xml")
+    val parentDir = outputFile.resolve(folderName + File.separator)
+    var file = parentDir.resolve("strings.xml")
 
-    if(file?.exists() == false) {
+    if(!file.exists()) {
         withContext(Dispatchers.IO) {
-            file?.createNewFile()
+            kotlin.runCatching { parentDir.mkdirs() }.onFailure { it.printStackTrace() }
+            kotlin.runCatching { file.createNewFile() }.onFailure { it.printStackTrace() }
         }
     }
 
-    if(file == null || !file.canWrite()) {
+    if(!file.canWrite()) {
         file = withContext(Dispatchers.IO) {
             File.createTempFile("strings-${language.key}", ".xml")
         }
         addStatus(TranslateStatus(type = StatusType.Warning,message = "Output File Path undefined , set to temporary file ${file.absolutePath}"))
     }
 
-    if(file == null) error("File is null")
-
-    val writer = file.bufferedWriter()
+    val stream = kotlin.runCatching { file.outputStream() }.getOrNull() ?: withContext(Dispatchers.IO) {
+        file.createNewFile()
+    }.let { file.outputStream() }
+    val streamWriter = stream.writer()
+    val writer = BufferedWriter(streamWriter)
 
     withContext(Dispatchers.IO) {
         writer.write("""<?xml version="1.0" encoding="utf-8"?>${"\n"}""")
@@ -40,6 +45,8 @@ suspend fun AppState.saveLanguage(
         }
         writer.write("</resources>")
         writer.close()
+        streamWriter.close()
+        stream.close()
 
         addStatus(TranslateStatus(type = StatusType.Success,message = "${language.name} has been translated and saved successfully"))
     }

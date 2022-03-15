@@ -4,7 +4,6 @@ import AppState
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.joinAll
@@ -59,16 +58,18 @@ suspend fun AppState.googleTranslate(toLanguage: TranslationLanguage, langMap: M
     val translateMap = langMap.toMutableMap()
     val translatedMap = mutableMapOf<String, String>()
 
-    val maxLangThreads = 4
+    val maxLangThreads = 12
 
-    val jobs = mutableListOf<Job>()
+    suspend fun launchLanguageCoroutines() {
 
-    fun launchLanguageCoroutines() {
-        for (i in 0 until minOf(translateMap.size, maxLangThreads)) {
+        val jobs = mutableListOf<Job>()
+        val totalJobs = minOf(translateMap.size, maxLangThreads)
+
+        for (i in 0 until totalJobs) {
 
             val translateKey = translateMap.keys.elementAt(i)
 
-            val job = launch(IO) {
+            val job = launch {
                 val toTranslate = translateMap[translateKey]
                 val translated: String? = kotlin.runCatching {
                     if (toTranslate != null) {
@@ -102,39 +103,32 @@ suspend fun AppState.googleTranslate(toLanguage: TranslationLanguage, langMap: M
             jobs.add(job)
         }
 
-        if(jobs.size > 0){
-            jobs.last().invokeOnCompletion {
-                jobs.clear()
-                if(translateMap.isNotEmpty()) {
-                    launchLanguageCoroutines()
-                }else {
+        jobs.joinAll()
 
-                }
+        if (translateMap.isEmpty()) {
+            if (translatedMap.size == langMap.size) {
+                addStatus(
+                    TranslateStatus(
+                        type = StatusType.Warning,
+                        message = "Some keys from the language ${toLanguage.name} haven't been translated"
+                    )
+                )
             }
+            addStatus(
+                TranslateStatus(
+                    type = StatusType.Success,
+                    message = "Translation for language $toLanguage has completed"
+                )
+            )
+            jobs.clear()
+            saveLanguage(language = toLanguage, langMap = translatedMap)
+        } else {
+            jobs.clear()
+            launchLanguageCoroutines()
         }
     }
 
     launchLanguageCoroutines()
-
-    joinAll()
-
-
-    if (translatedMap.size == langMap.size) {
-        addStatus(
-            TranslateStatus(
-                type = StatusType.Success,
-                message = "Translation for language $toLanguage has completed"
-            )
-        )
-        saveLanguage(language = toLanguage, langMap = translatedMap)
-    } else {
-        addStatus(
-            TranslateStatus(
-                type = StatusType.Warning,
-                message = "Some keys from the language ${toLanguage.name} haven't been translated"
-            )
-        )
-    }
 }
 
 suspend fun googleTranslate(

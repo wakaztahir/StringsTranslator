@@ -22,7 +22,7 @@ val LocalAppState = staticCompositionLocalOf<AppState> { error("app state uninit
 
 @Composable
 @Preview
-fun App() {
+fun App() = runCatching {
     MaterialTheme {
 
         var currentApi by remember { mutableStateOf(TranslationApi.GoogleTranslate) }
@@ -53,6 +53,8 @@ fun App() {
             }
         }
     }
+}.onFailure {
+    it.printStackTrace()
 }
 
 fun main() = application {

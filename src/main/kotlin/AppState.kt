@@ -7,14 +7,15 @@ import components.TranslationApi
 import model.TranslateStatus
 import model.TranslationLanguage
 import java.io.File
+import java.nio.file.FileSystems
 
 class AppState {
     var translationApi by mutableStateOf(TranslationApi.GoogleTranslate)
     var sourceLanguage by mutableStateOf(TranslationLanguage.English)
     var sourceFile by mutableStateOf<File?>(null)
     var translationRunning  by mutableStateOf(false)
-    var outputFile by mutableStateOf<File?>(null)
-    val languagesList = mutableStateListOf<TranslationLanguage>()
+    var outputFile by mutableStateOf<File>(FileSystems.getDefault().getPath("").toAbsolutePath().toFile().resolve("strings/"))
+    val languagesList = mutableStateListOf<TranslationLanguage>(*TranslationLanguage.values()).apply { remove(sourceLanguage) }
     val statusList = mutableStateListOf<TranslateStatus>()
 
     @Synchronized

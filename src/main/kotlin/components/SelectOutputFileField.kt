@@ -2,7 +2,9 @@ package components
 
 import LocalAppState
 import androidx.compose.foundation.border
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.material.Icon
@@ -35,8 +37,9 @@ fun SelectOutputFileField(modifier: Modifier = Modifier) {
         BasicText(
             modifier = Modifier.weight(1f)
                 .border(2.dp, color = MaterialTheme.colors.onBackground.copy(.05f), shape = RoundedCornerShape(8.dp))
-                .padding(12.dp),
-            text = "Output : " + state.outputFile?.path.toString(),
+                .padding(12.dp)
+                .horizontalScroll(rememberScrollState()),
+            text = "Output : " + state.outputFile.path.toString(),
             style = MaterialTheme.typography.caption
         )
         Spacer(Modifier.width(8.dp))
