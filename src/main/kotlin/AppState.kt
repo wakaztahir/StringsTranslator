@@ -16,7 +16,7 @@ class AppState {
     var sourceLanguage by mutableStateOf(TranslationLanguage.English)
     var sourceFile by mutableStateOf<File?>(null)
     var translationRunning  by mutableStateOf(false)
-    var outputFile by mutableStateOf<File>(FileSystems.getDefault().getPath("").toAbsolutePath().toFile().resolve("strings/"))
+    var outputFile by mutableStateOf<File>(File(System.getProperty("user.home") + File.separator + "strings-export"))
     val languagesList = mutableStateListOf<TranslationLanguage>(*PopularLanguages.toTypedArray()).apply { remove(sourceLanguage) }
     val statusList = mutableStateListOf<TranslateStatus>()
 

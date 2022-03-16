@@ -14,22 +14,36 @@ suspend fun AppState.saveLanguage(
     langMap : Map<String,String>
 ){
     val folderName = "values-${language.key}"
-    val parentDir = outputFile.resolve(folderName + File.separator)
+    var parentDir = outputFile.resolve(folderName + File.separator)
     var file = parentDir.resolve("strings.xml")
 
-    if(!file.exists()) {
-        withContext(Dispatchers.IO) {
-            kotlin.runCatching { parentDir.mkdirs() }.onFailure { it.printStackTrace() }
-            kotlin.runCatching { file.createNewFile() }.onFailure { it.printStackTrace() }
+
+    var tries = 0
+    suspend fun createFile(){
+        parentDir = outputFile.resolve(folderName + File.separator)
+        file = parentDir.resolve("strings.xml")
+        if(!file.exists()) {
+            withContext(Dispatchers.IO) {
+                kotlin.runCatching { parentDir.mkdirs() }.onFailure { it.printStackTrace() }
+                kotlin.runCatching { file.createNewFile() }.onFailure { it.printStackTrace() }
+            }
+        }
+        if(!file.canWrite()) {
+            outputFile = if(tries > 0){
+                addStatus(TranslateStatus(type = StatusType.Error,message = "Cannot write to output file path , updating to temporary directory"))
+                withContext(Dispatchers.IO) {
+                    File.createTempFile("temp", "temp", null)
+                }.parentFile
+            }else {
+                File(System.getProperty("user.home") + File.separator + "strings-export")
+            }
+            addStatus(TranslateStatus(type = StatusType.Warning,message = "Can't write to output , output file path updated to ${outputFile.absolutePath}"))
+            tries++
+            if(tries == 0) createFile()
         }
     }
 
-    if(!file.canWrite()) {
-        file = withContext(Dispatchers.IO) {
-            File.createTempFile("strings-${language.key}", ".xml")
-        }
-        addStatus(TranslateStatus(type = StatusType.Warning,message = "Output File Path undefined , set to temporary file ${file.absolutePath}"))
-    }
+    createFile()
 
     val stream = kotlin.runCatching { file.outputStream() }.getOrNull() ?: withContext(Dispatchers.IO) {
         file.createNewFile()
