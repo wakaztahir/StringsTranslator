@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "me.wakaztahir"
-version = "1.0"
+version = "2.0.1"
 
 repositories {
     google()
@@ -36,7 +36,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "StringsTranslator"
-            packageVersion = "1.0.0"
+            packageVersion = "2.0.1"
             modules("java.base", "java.instrument", "java.sql", "jdk.unsupported")
         }
     }

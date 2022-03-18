@@ -26,7 +26,6 @@ val LocalAppState = staticCompositionLocalOf<AppState> { error("app state uninit
 fun App() = runCatching {
     MaterialTheme {
 
-        var currentApi by remember { mutableStateOf(TranslationApi.GoogleTranslate) }
         val appState = AppState()
 
         val scope = rememberCoroutineScope()
