@@ -1,6 +1,6 @@
 package model
 
-enum class TranslationLanguage(val key: String) {
+enum class TranslationLanguage(val key: String,val folderKey : String = key) {
     Afrikaans("af"),
     Akan("ak"),
     Albanian("sq"),
@@ -21,7 +21,7 @@ enum class TranslationLanguage(val key: String) {
     Catalan("ca"),
     Cherokee("chr"),
     Chichewa("ny"),
-    ChineseSimplified("zh-CN"),
+    ChineseSimplified("zh-CN","zh-rCN"),
     ChineseTraditional("zh-TW"),
     Corsican("co"),
     Croatian("hr"),

@@ -13,7 +13,7 @@ suspend fun AppState.saveLanguage(
     language: TranslationLanguage,
     langMap : Map<String,String>
 ){
-    val folderName = "values-${language.key}"
+    val folderName = "values-${language.folderKey}"
     var parentDir = outputFile.resolve(folderName + File.separator)
     var file = parentDir.resolve("strings.xml")
 
