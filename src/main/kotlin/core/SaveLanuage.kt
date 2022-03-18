@@ -55,7 +55,7 @@ suspend fun AppState.saveLanguage(
         writer.write("""<?xml version="1.0" encoding="utf-8"?>${"\n"}""")
         writer.write("<resources>\n")
         langMap.forEach {
-            writer.write("""<string name="${it.key}">${it.value}</string>${"\n"}""")
+            writer.write("""${"\t"}<string name="${it.key}">${it.value}</string>${"\n"}""")
         }
         writer.write("</resources>")
         writer.close()

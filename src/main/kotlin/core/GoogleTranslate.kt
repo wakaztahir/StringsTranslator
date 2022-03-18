@@ -2,12 +2,10 @@ package core
 
 import AppState
 import io.ktor.client.call.*
+import io.ktor.client.features.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.joinAll
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import model.StatusType
 import model.TranslateStatus
 import model.TranslationLanguage
@@ -40,6 +38,7 @@ suspend fun AppState.googleTranslate() = coroutineScope {
 
     while (translatingLanguages.isNotEmpty()) {
         val translatingLanguage = translatingLanguages.first()
+        addStatus(TranslateStatus(type = StatusType.Info,message = "Beginning Translation For Language ${translatingLanguage.name}"))
         googleTranslate(toLanguage = translatingLanguage, langMap = langMap)
         translatingLanguages.remove(translatingLanguage)
     }
@@ -102,7 +101,7 @@ suspend fun AppState.googleTranslate(toLanguage: TranslationLanguage, langMap: M
         jobs.joinAll()
 
         if (translateMap.isEmpty()) {
-            if (translatedMap.size == langMap.size) {
+            if (translatedMap.size != langMap.size) {
                 addStatus(
                     TranslateStatus(
                         type = StatusType.Warning,
@@ -135,17 +134,20 @@ suspend fun googleTranslate(
     val base = "https://translate.google.com"
     val url = base + "/m?sl=" + srcLanguage.key + "&tl=" + toLanguage.key + "&q=" + toTranslate.replace(" ", "+")
 
-    val response = client.get<HttpResponse>(url) {
-
+    val response = withContext(Dispatchers.IO) {
+        client.get<HttpResponse>(url) {
+            this.timeout {
+                this.connectTimeoutMillis = 6000
+                this.requestTimeoutMillis = 6000
+            }
+        }
     }
 
     val payload = response.receive<String>()
+
     val start = """<div class="result-container">"""
     val end = "</div>"
     val startIndex = payload.indexOf(start)
 
-    val translation =
-        payload.substring(startIndex + start.length, payload.indexOf(startIndex = startIndex, string = end))
-
-    return translation
+    return payload.substring(startIndex + start.length, payload.indexOf(startIndex = startIndex, string = end))
 }

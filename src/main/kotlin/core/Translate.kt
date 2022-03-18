@@ -4,10 +4,13 @@ import AppState
 import components.TranslationApi
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
+import io.ktor.client.features.*
 import model.StatusType
 import model.TranslateStatus
 
-val client = HttpClient(CIO)
+val client = HttpClient(CIO) {
+    install(HttpTimeout)
+}
 
 suspend fun AppState.beginTranslate() {
     when (translationApi) {

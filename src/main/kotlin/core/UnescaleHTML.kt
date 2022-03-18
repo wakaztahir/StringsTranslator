@@ -183,7 +183,11 @@ object StringUtils {
 
     fun unescapeForStrings(input: String): String {
         return unescapeHtml3(input).let {
-            if (it == "'") "\\'" else it
+            var str = it
+            if(it.contains("'")) {
+                str = str.replace(oldValue = "'", newValue = "\\'")
+            }
+            str
         }
     }
 }
