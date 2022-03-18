@@ -14,6 +14,7 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 import components.*
+import core.StringUtils
 import core.beginTranslate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

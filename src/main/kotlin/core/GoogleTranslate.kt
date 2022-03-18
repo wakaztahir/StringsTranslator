@@ -36,12 +36,6 @@ suspend fun AppState.googleTranslate() = coroutineScope {
         return@coroutineScope
     }
 
-    if (outputFile == null) {
-        addStatus(TranslateStatus(type = StatusType.Warning, message = "You haven't selected any output file"))
-        translationRunning = false
-        return@coroutineScope
-    }
-
     val langMap = parseXML(sourceFile!!)
 
     while (translatingLanguages.isNotEmpty()) {
@@ -71,7 +65,7 @@ suspend fun AppState.googleTranslate(toLanguage: TranslationLanguage, langMap: M
 
             val job = launch {
                 val toTranslate = translateMap[translateKey]
-                val translated: String? = kotlin.runCatching {
+                var translated: String? = kotlin.runCatching {
                     if (toTranslate != null) {
                         googleTranslate(srcLanguage = sourceLanguage, toLanguage = toLanguage, toTranslate)
                     } else {
@@ -80,6 +74,8 @@ suspend fun AppState.googleTranslate(toLanguage: TranslationLanguage, langMap: M
                 }.onFailure {
                     addStatus(TranslateStatus(type = StatusType.Error, message = it.message.toString()))
                 }.getOrNull()
+
+                translated = translated?.let { StringUtils.unescapeForStrings(it) }
 
                 if (translated != null) {
                     addStatus(
