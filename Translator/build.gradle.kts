@@ -6,7 +6,7 @@ plugins {
     id("maven-publish")
 }
 
-group = "com.wakaztahir"
+group = "com.wakaztahir.strings"
 version = "2.0.3"
 
 repositories {
@@ -42,7 +42,7 @@ afterEvaluate {
         repositories {
             maven {
                 name = "GithubPackages"
-                url = uri("https://maven.pkg.github.com/wakaztahir/Strings-Translator")
+                url = uri("https://maven.pkg.github.com/wakaztahir/StringsTranslator")
 
                 runCatching {
                     credentials {
