@@ -1,6 +1,5 @@
 package core
 
-import AppState
 import io.ktor.client.call.*
 import io.ktor.client.features.*
 import io.ktor.client.request.*
@@ -10,7 +9,7 @@ import model.StatusType
 import model.TranslateStatus
 import model.TranslationLanguage
 
-suspend fun AppState.googleTranslate() = coroutineScope {
+suspend fun TranslatorState.googleTranslate() = coroutineScope {
     translationRunning = true
 
     addStatus(TranslateStatus(type = StatusType.Info, message = "Google Translate running"))
@@ -38,7 +37,12 @@ suspend fun AppState.googleTranslate() = coroutineScope {
 
     while (translatingLanguages.isNotEmpty()) {
         val translatingLanguage = translatingLanguages.first()
-        addStatus(TranslateStatus(type = StatusType.Info,message = "Beginning Translation For Language ${translatingLanguage.name}"))
+        addStatus(
+            TranslateStatus(
+                type = StatusType.Info,
+                message = "Beginning Translation For Language ${translatingLanguage.name}"
+            )
+        )
         googleTranslate(toLanguage = translatingLanguage, langMap = langMap)
         translatingLanguages.remove(translatingLanguage)
     }
@@ -46,7 +50,7 @@ suspend fun AppState.googleTranslate() = coroutineScope {
     translationRunning = false
 }
 
-suspend fun AppState.googleTranslate(toLanguage: TranslationLanguage, langMap: Map<String, String>) = coroutineScope {
+suspend fun TranslatorState.googleTranslate(toLanguage: TranslationLanguage, langMap: Map<String, String>) = coroutineScope {
 
     val translateMap = langMap.toMutableMap()
     val translatedMap = mutableMapOf<String, String>()

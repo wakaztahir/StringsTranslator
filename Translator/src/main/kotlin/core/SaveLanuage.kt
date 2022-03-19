@@ -1,6 +1,5 @@
 package core
 
-import AppState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import model.StatusType
@@ -9,37 +8,47 @@ import model.TranslationLanguage
 import java.io.BufferedWriter
 import java.io.File
 
-suspend fun AppState.saveLanguage(
+suspend fun TranslatorState.saveLanguage(
     language: TranslationLanguage,
-    langMap : Map<String,String>
-){
+    langMap: Map<String, String>
+) {
     val folderName = "values-${language.folderKey}"
     var parentDir = outputFile.resolve(folderName + File.separator)
     var file = parentDir.resolve("strings.xml")
 
 
     var tries = 0
-    suspend fun createFile(){
+    suspend fun createFile() {
         parentDir = outputFile.resolve(folderName + File.separator)
         file = parentDir.resolve("strings.xml")
-        if(!file.exists()) {
+        if (!file.exists()) {
             withContext(Dispatchers.IO) {
                 kotlin.runCatching { parentDir.mkdirs() }.onFailure { it.printStackTrace() }
                 kotlin.runCatching { file.createNewFile() }.onFailure { it.printStackTrace() }
             }
         }
-        if(!file.canWrite()) {
-            outputFile = if(tries > 0){
-                addStatus(TranslateStatus(type = StatusType.Error,message = "Cannot write to output file path , updating to temporary directory"))
+        if (!file.canWrite()) {
+            outputFile = if (tries > 0) {
+                addStatus(
+                    TranslateStatus(
+                        type = StatusType.Error,
+                        message = "Cannot write to output file path , updating to temporary directory"
+                    )
+                )
                 withContext(Dispatchers.IO) {
                     File.createTempFile("temp", "temp", null)
                 }.parentFile
-            }else {
+            } else {
                 File(System.getProperty("user.home") + File.separator + "strings-export")
             }
-            addStatus(TranslateStatus(type = StatusType.Warning,message = "Can't write to output , output file path updated to ${outputFile.absolutePath}"))
+            addStatus(
+                TranslateStatus(
+                    type = StatusType.Warning,
+                    message = "Can't write to output , output file path updated to ${outputFile.absolutePath}"
+                )
+            )
             tries++
-            if(tries == 0) createFile()
+            if (tries == 0) createFile()
         }
     }
 
@@ -62,6 +71,11 @@ suspend fun AppState.saveLanguage(
         streamWriter.close()
         stream.close()
 
-        addStatus(TranslateStatus(type = StatusType.Success,message = "${language.name} has been translated and saved successfully"))
+        addStatus(
+            TranslateStatus(
+                type = StatusType.Success,
+                message = "${language.name} has been translated and saved successfully"
+            )
+        )
     }
 }

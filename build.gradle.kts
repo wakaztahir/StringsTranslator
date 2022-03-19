@@ -18,12 +18,7 @@ repositories {
 
 dependencies {
     implementation(compose.desktop.currentOs)
-    val ktorVersion = "1.6.8"
-    implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-cio:$ktorVersion")
-    // XML Parsing for strings.xml
-    implementation("org.simpleframework:simple-xml:2.7.1")
-
+    implementation(project(":Translator"))
 }
 
 tasks.withType<KotlinCompile> {
