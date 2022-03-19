@@ -18,7 +18,7 @@ repositories {
 
 dependencies {
     implementation(compose.desktop.currentOs)
-    implementation(project(":Translator"))
+    implementation(project(":translator"))
 }
 
 tasks.withType<KotlinCompile> {

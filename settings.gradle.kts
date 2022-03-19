@@ -7,4 +7,4 @@ pluginManagement {
 
 }
 rootProject.name = "StringsTranslator"
-include("Translator")
+include("translator")
