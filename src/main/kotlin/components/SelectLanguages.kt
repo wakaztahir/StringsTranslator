@@ -51,7 +51,7 @@ fun SelectLanguages(modifier : Modifier = Modifier){
                     Row(horizontalArrangement = Arrangement.Center) {
                         OutlinedButton(onClick = {
                             state.languagesList.addAll(TranslationLanguage.values())
-                            state.languagesList.remove(state.sourceLanguage)
+                            state.languagesList.remove(state.sourceLang)
                         }){
                             Text(text = "Select All")
                         }
@@ -65,7 +65,7 @@ fun SelectLanguages(modifier : Modifier = Modifier){
                         OutlinedButton(onClick = {
                             state.languagesList.clear()
                             state.languagesList.addAll(PopularLanguages)
-                            state.languagesList.remove(state.sourceLanguage)
+                            state.languagesList.remove(state.sourceLang)
                         }){
                             Text(text = "Add Popular")
                         }

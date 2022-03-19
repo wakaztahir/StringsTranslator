@@ -70,7 +70,7 @@ suspend fun TranslatorState.googleTranslate(toLanguage: TranslationLanguage, lan
                 val toTranslate = translateMap[translateKey]
                 var translated: String? = kotlin.runCatching {
                     if (toTranslate != null) {
-                        googleTranslate(srcLanguage = sourceLanguage, toLanguage = toLanguage, toTranslate)
+                        googleTranslate(srcLanguage = sourceLang, toLanguage = toLanguage, toTranslate)
                     } else {
                         null
                     }

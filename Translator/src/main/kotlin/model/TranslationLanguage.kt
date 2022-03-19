@@ -152,7 +152,7 @@ enum class TranslationLanguage(val key: String,val folderKey : String = key) {
     Zulu("zu"),
 }
 
-val PopularLanguages = listOf<TranslationLanguage>(
+val PopularLanguages = listOf(
     TranslationLanguage.English,
     TranslationLanguage.Arabic,
     TranslationLanguage.ChineseSimplified,

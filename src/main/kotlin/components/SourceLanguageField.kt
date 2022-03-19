@@ -48,14 +48,13 @@ fun SourceLanguageField(modifier: Modifier = Modifier) {
                         }
                     }
                     SingleLanguageSelectionList(
-                        modifier = Modifier.padding(end = 32.dp),
-                        selected = state.sourceLanguage,
-                        onUpdate = { state.sourceLanguage = it }
+                        modifier = Modifier.padding(end = 32.dp)
                     )
                 }
             }
         }
     } else {
+
         OutlinedButton(
             modifier = modifier,
             enabled = !state.translationRunning,
@@ -63,25 +62,27 @@ fun SourceLanguageField(modifier: Modifier = Modifier) {
                 listVisible = true
             }
         ) {
-            Text(text = "Source Language : ${state.sourceLanguage.name}")
+            Text(text = "Source Language : ${state.sourceLang.name}")
         }
-    }
 
+    }
 }
 
 
 @Composable
-fun SingleLanguageSelectionList(
-    modifier: Modifier = Modifier,
-    selected: TranslationLanguage,
-    onUpdate: (TranslationLanguage) -> Unit
-) {
+fun SingleLanguageSelectionList(modifier: Modifier = Modifier) {
+
+    val state = LocalAppState.current
+
     LazyColumn(modifier = modifier) {
-        items(TranslationLanguage.values()) { lang ->
-            Row(modifier = Modifier.padding(horizontal = 12.dp).fillMaxWidth().clip(shape = RoundedCornerShape(6.dp)).clickable { onUpdate(lang) },verticalAlignment = Alignment.CenterVertically) {
+        items(TranslationLanguage.values(), key = { it.key }) { lang ->
+            Row(
+                modifier = Modifier.padding(horizontal = 12.dp).fillMaxWidth().clip(shape = RoundedCornerShape(6.dp))
+                    .clickable { state.sourceLang = lang }, verticalAlignment = Alignment.CenterVertically
+            ) {
                 RadioButton(
-                    selected = selected == lang,
-                    onClick = { onUpdate(lang) }
+                    selected = state.sourceLang == lang,
+                    onClick = { state.sourceLang = lang }
                 )
                 Text(text = lang.name)
             }

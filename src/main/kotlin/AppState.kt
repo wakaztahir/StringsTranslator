@@ -12,12 +12,11 @@ import java.io.File
 
 class AppState : TranslatorState {
     override var translationApi by mutableStateOf(TranslationApi.GoogleTranslate)
-    override var sourceLanguage by mutableStateOf(TranslationLanguage.English)
+    override var sourceLang by mutableStateOf(TranslationLanguage.English)
     override var sourceFile by mutableStateOf<File?>(null)
     override var translationRunning by mutableStateOf(false)
     override var outputFile by mutableStateOf<File>(File(System.getProperty("user.home") + File.separator + "strings-export"))
-    override val languagesList =
-        mutableStateListOf<TranslationLanguage>(*PopularLanguages.toTypedArray()).apply { remove(sourceLanguage) }
+    override val languagesList = mutableStateListOf<TranslationLanguage>(*PopularLanguages.toTypedArray()).apply { remove(sourceLang) }
     val statusList = mutableStateListOf<TranslateStatus>()
 
     // status toggles
