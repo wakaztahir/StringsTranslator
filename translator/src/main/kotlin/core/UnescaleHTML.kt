@@ -1,5 +1,6 @@
 package core
 
+import model.TranslationLanguage
 import java.io.StringWriter
 
 
@@ -181,9 +182,28 @@ object StringUtils {
         return input
     }
 
-    fun unescapeForStrings(input: String): String {
-        return unescapeHtml3(input).let {
-            if(it.contains("'")) it.replace(oldValue = "'", newValue = "\\'") else it
+    private fun escapeSingleQuote(language: TranslationLanguage, escapeIt: String, startIndex: Int = 0): String {
+        val index = escapeIt.indexOf("'"[0], startIndex)
+        val x = if (index > -1) {
+            if (language.isRtl && (index + 1) < escapeIt.length) {
+                if ((escapeIt[index + 1] != '\\')) {
+                    escapeIt.substring(0, index + 1) + '\\' + escapeIt.substring(index + 1, escapeIt.length)
+                } else escapeIt
+            } else if (!language.isRtl && (index - 1) > 0) {
+                if (escapeIt[index - 1] != '\\') {
+                    escapeIt.substring(0, index) + '\\' + escapeIt.substring(index, escapeIt.length)
+                } else escapeIt
+            } else {
+                escapeIt
+            }
+        } else {
+            escapeIt
         }
+        val nextIndex = x.indexOf("'"[0], index + 1)
+        return if (nextIndex == -1) x else escapeSingleQuote(language = language, x, startIndex = index + 1)
+    }
+
+    fun unescapeForStrings(language: TranslationLanguage, input: String): String {
+        return escapeSingleQuote(language,unescapeHtml3(input))
     }
 }

@@ -78,7 +78,7 @@ suspend fun TranslatorState.googleTranslate(toLanguage: TranslationLanguage, lan
                     addStatus(TranslateStatus(type = StatusType.Error, message = it.message.toString()))
                 }.getOrNull()
 
-                translated = translated?.let { StringUtils.unescapeForStrings(it) }
+                translated = translated?.let { StringUtils.unescapeForStrings(toLanguage,it) }
 
                 if (translated != null) {
                     addStatus(
