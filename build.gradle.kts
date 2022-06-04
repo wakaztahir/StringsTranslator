@@ -31,7 +31,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "StringsTranslator"
-            packageVersion = "2.0.3"
+            packageVersion = "2.0.4"
             modules("java.base", "java.instrument", "java.sql", "jdk.unsupported")
         }
     }
